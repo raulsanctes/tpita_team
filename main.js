@@ -149,12 +149,21 @@ function drawInterface() {
     ctx.font = font(STYLE.cv_text);
     DATA.profile.stats.forEach((stat, i) => ctx.fillText(stat, p + 200, p + 90 + (i * 35)));
     let bioY = drawWrappedText(DATA.profile.bio, p + 30, p + 290, CONFIG.sideWidth - 60, 30);
+    // Busca esta parte en tu función drawInterface:
     DATA.profile.links.forEach((link, i) => {
         let ly = bioY + 20 + (i * 40);
         ctx.font = font(STYLE.cv_text, hoveredLink === i);
-        ctx.fillText(`> [ ${link.label} ]`, p + 30, ly);
+        
+        // ESTA LÍNEA ES LA CLAVE: debe usar link.label
+        ctx.fillText(`> [ ${link.label} ]`, p + 30, ly); 
+        
         let m = ctx.measureText(`> [ ${link.label} ]`);
-        clickZones.push({x: p+30, y: ly - 25, w: m.width, h: 30, action: 'link', url: link.url, id: i});
+        clickZones.push({
+            x: p+30, y: ly - 25, w: m.width, h: 30, 
+            action: 'link', 
+            url: link.url, // Y aquí usa link.url del JSON
+            id: i
+        });
     });
 
     const midX = p + CONFIG.sideWidth + CONFIG.gap;
