@@ -1,38 +1,77 @@
-<div class="screen"> <div class="terminal-content">
-        <header class="header">
-            <h1 id="header-title">TERMINAL_LOADED</h1>
-            <div class="scanline-v"></div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL TÁCTICA V4 // OPERATIVA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="scan-line-anim"></div>
+
+    <div class="terminal-container">
+        
+        <header class="main-header">
+            <h1 id="header-title">LOADING SYSTEM...</h1>
+            <p id="header-subtitle">SECURE_CONNECTION_ESTABLISHED</p>
         </header>
 
         <div class="main-grid">
-            <div class="window">
-                <div class="window-header">ESTADO_SUJETO</div>
-                <div class="window-content">
-                    <img id="profile-img" src="profile.jpg" width="120">
-                    <div id="profile-info">
-                        <h2 id="profile-name">Cargando...</h2>
-                        <div id="profile-stats"></div>
-                    </div>
+            
+            <aside class="window profile-window">
+                <div class="window-header">
+                    <span>ESTADO_DEL_SUJETO</span>
+                    <span>ID: 0042</span>
                 </div>
-            </div>
-
-            <div class="window viewer-main">
-                <div class="window-header" id="viewer-title">VISOR_SATELITAL</div>
                 <div class="window-content">
-                    <div class="img-wrapper">
-                        <img id="main-viewer-img" src="">
-                        <div class="hud">
-                            <p id="hud-lat">LAT: --.----</p>
-                            <p id="hud-lon">LON: --.----</p>
+                    <div class="profile-img-container">
+                        <img src="profile.jpg" alt="Sujeto" id="profile-img">
+                    </div>
+                    <h2 id="profile-name">---</h2>
+                    <ul class="stats-list" id="profile-stats">
+                        </ul>
+                    <hr style="border: 0; border-top: 1px dashed var(--neon-green); margin: 15px 0;">
+                    <div id="profile-links">
+                        </div>
+                </div>
+            </aside>
+
+            <main class="window viewer-window">
+                <div class="window-header">
+                    <span id="viewer-title">VISOR_SATELITAL // STANDBY</span>
+                    <span>AUTO_SYNC: ON</span>
+                </div>
+                <div class="window-content">
+                    <div class="viewer-container">
+                        <img id="main-viewer-img" src="" alt="Esperando señal...">
+                        
+                        <div class="hud-overlay">
+                            <div id="hud-lat">LAT: 00.0000°N</div>
+                            <div id="hud-lon">LON: 00.0000°W</div>
+                            <div id="hud-alt">ALT: 4500m</div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
+
         </div>
 
-        <div class="window">
-            <div class="window-header">ARCHIVOS_SISTEMA</div>
-            <div id="file-list" class="file-grid"></div>
-        </div>
+        <section class="window explorer-section">
+            <div class="window-header">
+                <span>EXPLORADOR_DE_DATOS_LOCALES</span>
+                <span>VOL: /mnt/user/data</span>
+            </div>
+            <div class="window-content">
+                <div class="file-list" id="file-list">
+                    </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
     </div>
 </div>
