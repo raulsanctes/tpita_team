@@ -1,75 +1,38 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MILITARY TERMINAL V4</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="terminal-container">
-        <header class="main-header">
-            <h1 id="header-title">LOADING...</h1>
-            <p id="header-subtitle">SYSTEM STATUS: ACTIVE</p>
+<div class="screen"> <div class="terminal-content">
+        <header class="header">
+            <h1 id="header-title">TERMINAL_LOADED</h1>
+            <div class="scanline-v"></div>
         </header>
 
-        <main class="grid-layout">
-            <section class="window profile-window">
-                <div class="window-header">USER_PROFILE</div>
+        <div class="main-grid">
+            <div class="window">
+                <div class="window-header">ESTADO_SUJETO</div>
                 <div class="window-content">
-                    <div class="profile-top">
-                        <div class="profile-img-container">
-                            <img src="profile.jpg" alt="Profile" id="profile-img">
-                        </div>
-                        <ul id="profile-stats"></ul>
-                    </div>
-                    <h2 id="profile-name">---</h2>
-                    <p id="profile-bio"></p>
-                    <div id="profile-links" class="links-container"></div>
-                </div>
-            </section>
-
-            <section class="window core-window">
-                <div class="window-header">CORE_COMMUNICATIONS</div>
-                <div class="window-content">
-                    <div id="lore-text"></div>
-                    <div class="frequency-display">
-                        <span id="freq-val">22222.00</span> MHZ
+                    <img id="profile-img" src="profile.jpg" width="120">
+                    <div id="profile-info">
+                        <h2 id="profile-name">Cargando...</h2>
+                        <div id="profile-stats"></div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <section class="window stack-window">
-                <div class="window-header">SYSTEM_DECODING</div>
+            <div class="window viewer-main">
+                <div class="window-header" id="viewer-title">VISOR_SATELITAL</div>
                 <div class="window-content">
-                    <div id="stack-ascii" class="ascii-art"></div>
-                    <div class="progress-container">
-                        <div id="progress-bar"></div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="bottom-layout">
-            <section class="window explorer-window">
-                <div class="window-header">FILE_EXPLORER</div>
-                <div class="window-content" id="file-list"></div>
-            </section>
-
-            <section class="window viewer-window">
-                <div class="window-header" id="viewer-title">IMAGE_VIEWER</div>
-                <div class="window-content viewer-flex">
-                    <div class="image-container">
-                        <img id="main-viewer-img" src="" alt="Viewer">
-                        <div class="hud-overlay">
-                            <span id="hud-lat">LAT: 0.0000</span>
-                            <span id="hud-lon">LON: 0.0000</span>
+                    <div class="img-wrapper">
+                        <img id="main-viewer-img" src="">
+                        <div class="hud">
+                            <p id="hud-lat">LAT: --.----</p>
+                            <p id="hud-lon">LON: --.----</p>
                         </div>
                     </div>
                 </div>
-            </section>
-        </footer>
+            </div>
+        </div>
+
+        <div class="window">
+            <div class="window-header">ARCHIVOS_SISTEMA</div>
+            <div id="file-list" class="file-grid"></div>
+        </div>
     </div>
-    <script src="main.js"></script>
-</body>
-</html>
+</div>
