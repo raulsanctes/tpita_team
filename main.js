@@ -1,138 +1,108 @@
-async function loadTerminal() {
+/**
+ * TERMINAL CORE LOGIC V4
+ * Gestiona la carga de datos JSON y la interacción del visor.
+ */
+
+// Función principal de carga
+async function initTerminal() {
     try {
+        // Añadimos un timestamp (?v=...) para que no guarde el JSON en caché y siempre veas los cambios
         const response = await fetch('data.json?v=' + Date.now());
+        
+        if (!response.ok) throw new Error("No se pudo cargar el archivo data.json");
+        
         const data = await response.json();
 
-        // Header
-        document.getElementById('header-title').textContent = data.header.title;
-        document.getElementById('header-subtitle').textContent = data.header.subtitle;
+        // 1. CARGAR CABECERA
+        document.getElementById('header-title').textContent = data.header.title || "SYSTEM_ACTIVE";
+        document.getElementById('header-subtitle').textContent = data.header.subtitle || "ENCRYPTED_LINK";
 
-        // Profile
+        // 2. CARGAR PERFIL
         document.getElementById('profile-name').textContent = data.profile.name;
-        document.getElementById('profile-bio').textContent = data.profile.bio;
         
-        const statsList = document.getElementById('profile-stats');
-        data.profile.stats.forEach(s => statsList.innerHTML += `<li>${s}</li>`);
-
-        const linksCont = document.getElementById('profile-links');
-        data.profile.links.forEach(l => {
-            linksCont.innerHTML += `<a href="${l.url}" target="_blank" class="neon-link">> [ ${l.label} ]</a>`;
+        const statsContainer = document.getElementById('profile-stats');
+        statsContainer.innerHTML = ''; // Limpiar
+        data.profile.stats.forEach(stat => {
+            const li = document.createElement('li');
+            li.textContent = stat;
+            statsContainer.appendChild(li);
         });
 
-        // Files
+        // 3. CARGAR LINKS
+        const linksContainer = document.getElementById('profile-links');
+        linksContainer.innerHTML = '';
+        data.profile.links.forEach(link => {
+            const a = document.createElement('a');
+            a.href = link.url;
+            a.className = 'neon-link';
+            a.target = '_blank';
+            a.textContent = `> [ ${link.label} ]`;
+            linksContainer.appendChild(a);
+            linksContainer.appendChild(document.createElement('br'));
+        });
+
+        // 4. CARGAR EXPLORADOR DE ARCHIVOS
         const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
+
         data.files.forEach((file, index) => {
-            const btn = document.createElement('div');
-            btn.className = 'file-item';
-            btn.textContent = `> ${file.name}`;
-            btn.onclick = () => selectFile(file, index);
-            fileList.appendChild(btn);
+            const fileBtn = document.createElement('div');
+            fileBtn.className = 'file-item';
+            fileBtn.textContent = `FILE_${index.toString().padStart(3, '0')}.DAT`;
+            
+            // Evento al hacer clic en un archivo
+            fileBtn.onclick = () => {
+                // Quitar clase activa de otros
+                document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+                // Añadir a este
+                fileBtn.classList.add('active');
+                // Actualizar visor
+                updateViewer(file, index);
+            };
+
+            fileList.appendChild(fileBtn);
         });
 
-        // Cargar primer archivo por defecto
-        if(data.files.length > 0) selectFile(data.files[0], 0);
-
-    } catch (e) {
-        console.error("Error cargando terminal:", e);
-    }
-}
-
-function selectFile(file, index) {
-    document.getElementById('viewer-title').textContent = `IMAGE_VIEWER // ${file.name}`;
-    document.getElementById('main-viewer-img').src = file.url;
-    document.getElementById('hud-lat').textContent = `LAT: ${(index * 12.4532).toFixed(4)}°N`;
-    document.getElementById('hud-lon').textContent = `LON: ${(index * -45.1293).toFixed(4)}°W`;
-}
-
-loadTerminal();
-
-            
-            // Tinte verde
-            ctx.globalCompositeOperation = 'multiply';
-            ctx.fillStyle = CONFIG.color;
-            ctx.fillRect(iX, iY, iW, iH);
-            
-            ctx.globalCompositeOperation = 'source-over';
-            
-            // --- OVERLAY DE COORDENADAS Y DATOS ---
-            ctx.filter = 'none';
-            ctx.fillStyle = CONFIG.color;
-            ctx.font = font(14);
-            
-            // Generamos coordenadas "falsas" pero realistas basadas en el índice
-            const lat = (currentFileIdx * 12.4532).toFixed(4);
-            const lon = (currentFileIdx * -45.1293).toFixed(4);
-            
-            // Esquinas con coordenadas
-            ctx.fillText(`LAT: ${lat}°N`, iX + 10, iY + 20);
-            ctx.fillText(`LON: ${lon}°W`, iX + 10, iY + 40);
-            ctx.fillText(`ALT: 4500m`, iX + 10, iY + 60);
-
-            // Marca de agua / Timestamp
-            ctx.textAlign = "right";
-            ctx.fillText(`ISO_DATE: ${new Date().toISOString().split('T')[0]}`, iX + iW - 10, iY + 20);
-            ctx.fillText(`SYNC_STATUS: ENCRYPTED`, iX + iW - 10, iY + 40);            
-
-            // Scanlines
-            ctx.globalAlpha = 0.15; ctx.fillStyle = 'black';
-            for(let l = 0; l < iH; l += 5) ctx.fillRect(iX, iY + l, iW, 2);
-            
-        } else {
-            ctx.font = font(20); ctx.textAlign = "center";
-            ctx.fillText("WAITING_FOR_DATA_STREAM...", viewerX + viewerW/2, botY + botH/2);
+        // 5. CARGAR PRIMERA IMAGEN POR DEFECTO
+        if (data.files.length > 0) {
+            updateViewer(data.files[0], 0);
+            fileList.firstChild.classList.add('active');
         }
-        ctx.restore();
+
+        console.log("Terminal vinculada correctamente.");
+
+    } catch (error) {
+        console.error("CRITICAL_ERROR:", error);
+        document.getElementById('header-title').textContent = "SYSTEM_FAILURE";
     }
-    texture.needsUpdate = true;
 }
 
-function animate() {
-    requestAnimationFrame(animate);
-    stackScroll += 1;
-    if (loadingBar < loadingTarget) loadingBar += 0.5;
-    else { loadingTarget = Math.random() * 100; if (loadingBar > 99) loadingBar = 0; }
-    drawInterface();
-    renderer.render(scene, camera);
+/**
+ * Actualiza el visor principal con la imagen y coordenadas
+ */
+function updateViewer(file, index) {
+    const viewerImg = document.getElementById('main-viewer-img');
+    const viewerTitle = document.getElementById('viewer-title');
+    const latEl = document.getElementById('hud-lat');
+    const lonEl = document.getElementById('hud-lon');
+
+    // Cambiar imagen y título
+    viewerImg.src = file.url;
+    viewerTitle.textContent = `VISOR_SATELITAL // SRC: ${file.name}`;
+
+    // Generar coordenadas ficticias basadas en el índice del archivo
+    const mockLat = (12.4532 + (index * 0.0521)).toFixed(4);
+    const mockLon = (-45.1293 - (index * 0.0842)).toFixed(4);
+
+    latEl.textContent = `LAT: ${mockLat}°N`;
+    lonEl.textContent = `LON: ${mockLon}°W`;
+
+    // Efecto visual: parpadeo al cargar nueva imagen
+    viewerImg.style.opacity = "0";
+    setTimeout(() => {
+        viewerImg.style.opacity = "1";
+    }, 50);
 }
 
-// --- EVENTOS ---
-window.addEventListener('mousemove', (e) => {
-    const rect = renderer.domElement.getBoundingClientRect();
-    const mx = (e.clientX - rect.left) * (CONFIG.width / rect.width);
-    const my = (e.clientY - rect.top) * (CONFIG.height / rect.height);
-    hoveredLink = null;
-    document.body.style.cursor = 'default';
-    clickZones.forEach(z => {
-        if (mx >= z.x && mx <= z.x + z.w && my >= z.y && my <= z.y + z.h) {
-            document.body.style.cursor = 'pointer';
-            if (z.action === 'link') hoveredLink = z.id;
-        }
-    });
-});
-
-window.addEventListener('mousedown', (e) => {
-    const rect = renderer.domElement.getBoundingClientRect();
-    const mx = (e.clientX - rect.left) * (CONFIG.width / rect.width);
-    const my = (e.clientY - rect.top) * (CONFIG.height / rect.height);
-    clickZones.forEach(z => {
-        if (mx >= z.x && mx <= z.x + z.w && my >= z.y && my <= z.y + z.h) {
-            if (z.action === 'file') currentFileIdx = z.idx;
-            if (z.action === 'link' && z.url) window.open(z.url, '_blank');
-        }
-    });
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key >= '0' && e.key <= '9') {
-        e.preventDefault();
-        if (firstKey) { window.customFreq = ""; firstKey = false; }
-        if (window.customFreq.length < 5) window.customFreq += e.key;
-    }
-    if (e.key === "Backspace") {
-        e.preventDefault();
-        window.customFreq = window.customFreq.slice(0, -1);
-        if (window.customFreq === "") firstKey = true;
-    }
-}, true);
-
-loadData();
+// Iniciar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', initTerminal);
