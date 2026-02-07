@@ -1,0 +1,44 @@
+{
+    "header": {
+        "title": "THE PATH INTO THE ABYSS",
+        "subtitle": "MXR PRODUCTIONS // DEMO ON STEAM"
+    },
+    "profile": {
+        "name": "RAUL SANCHEZ",
+        "role": "3D ARTIST / TECH ART",
+        "stats": ["SERVICE: 1 year", "LVL: PICHÓN", "FACTION: ORIUNDO"],
+        "bio": "Specialized in high-poly modeling and PBR texturing for sci-fi environments. Developing assets for deep-sea survival simulations.",
+        "links": [
+            { "label": "ARTSTATION", "url": "https://artstation.com" },
+            { "label": "LINKEDIN", "url": "https://linkedin.com" },
+            { "label": "INSTAGRAM", "url": "https://instagram.com" }
+        ]
+    },
+    "stack": {
+        "keywords": ["UNREAL ENGINE 5", "BLENDER 4.0", "SUBSTANCE PAINTER", "ZBRUSH", "MAYA", "MARMOSET", "PYTHON", "C++"],
+        "ascii": ["01001101", "X-882_SYS", "|||||||||", "0x004F2", "[B_INIT]", ">>-->>", "ERR_NULL"]
+    },
+    "lore": [
+        "--- SYSTEM BOOT: SECTOR ARG-01 ---",
+        " ",
+        "The surface world is silent.",
+        "We have retreated to the deep architecture.",
+        "Pressure is stable at 1200 ATM.",
+        " ",
+        "Project 'Abyss' aims to recover legacy data",
+        "from the old networks.",
+        " ",
+        "Awaiting user input..."
+    ],
+    "files": [
+    { 
+        "name": "1114 UNPA", 
+        "type": "REMOTE_LINK", 
+        "url": "https://cdna.artstation.com/p/assets/images/images/092/192/686/large/raul-sanchez-tropas03.webp?1758929287" 
+    },
+    { 
+        "name": "VOLCADOR", 
+        "type": "REMOTE_LINK", 
+        "url": "https://cdnb.artstation.com/p/assets/images/images/092/192/711/large/raul-sanchez-volcador-4.webp?1758929320" 
+    }
+]}
